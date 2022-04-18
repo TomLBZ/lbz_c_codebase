@@ -40,16 +40,14 @@ void divide(void* input, void* output){
 
 void test(){
     printf("creating func list...\n");
-    InStruct input1 = {.a = 6, .b = 3};
+    InStruct input1 = {.a = 6, .b = 6};
     InStruct input2 = {.a = 55, .b = 11};
     InStruct input3 = {.a = 90, .b = 9};
     ResStruct output1 = {.res = 0};
     ResStruct output2 = {.res = 0};
     ResStruct output3 = {.res = 0};
-    InStruct inputs[3] = {input1, input2, input3};
-    ResStruct outputs[3] = {output1, output2, output3};
-    void* pinputs = inputs;
-    void* poutputs = outputs;
+    InStruct* inputs[3] = {&input1, &input2, &input3};
+    ResStruct* outputs[3] = {&output1, &output2, &output3};
     FuncList fl = createFuncList();
     printFuncList(&fl);
     printf("adding funcs to func list\n");
@@ -67,21 +65,38 @@ void test(){
     printf("done. now removing sub from list at index 0...\n");
     removeFuncByIndex(&fl, 0);
     printFuncList(&fl);
+
+    printf("done. now executing at index 0, should be \"mult\"...\n");
     executeAtIndex(&fl, 0, &input1, &output1);
-    printf("done. now executing at index 0, should be \"mult\"...\nres = %d\n", output1.res);
+    printf("MUL RES = %d\n", output1.res);
+    printf("done. now executing by id \"div\"...\n");
     executeById(&fl, lowerLettersToFuncId("div", 3), &input2, &output2);
-    printf("done. now executing by id \"div\"...\nres = %d\n", output2.res);
+    printf("DIV RES = %d\n", output2.res);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+
     printf("done. now executing all...\n");
-    executeAll(&fl, &pinputs, &poutputs);
-    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
-    printf("done. now executing by ids \"add\" then \"div\"...\n");
+    executeAll(&fl, (void**)&inputs, (void**)&outputs);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+    printf("done. now repeat executing all using (6,6)...\n");
+    repeatExecAll(&fl, &input1, (void**)&outputs);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+
+    printf("done. now executing by ids \"add\" then \"div\" using (6,6) and (55,11)...\n");
     size_t ids[2];
-    ids[0] = 20384; ids[1] = lowerLettersToFuncId("div", 3);
-    executeByIds(&fl, ids, &pinputs, &poutputs, 2);
-    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
-    printf("done. now repeat executing by indices 1 and 2, using input 6 and 3, should be \"div\" then \"add\"...\n");
+    ids[0] = 2809; ids[1] = lowerLettersToFuncId("div", 3);
+    executeByIds(&fl, ids, (void**)&inputs, (void**)&outputs, 2);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+    printf("done. now repeat executing by ids \"add\" then \"div\" using (90,9)...\n");
+    repeatExecByIds(&fl, ids, &input3, (void**)&outputs, 2);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+
+    printf("done. now executing by indices 0 and 2 using input (6, 6) and (55, 11), should be \"mul\" then \"add\"...\n");
+    ids[0] = 0; ids[1] = 2;
+    executeAtIndices(&fl, ids, (void**)&inputs, (void**)&outputs, 2);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
+    printf("done. now repeat executing by indices 0 and 1 using input (90, 9), should be \"mul\" then \"div\"...\n");
     ids[0] = 0; ids[1] = 1;
-    repeatExecAtIndices(&fl, ids, &pinputs, &poutputs, 2);
-    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
+    repeatExecAtIndices(&fl, ids, &input3, (void**)&outputs, 2);
+    for(int i = 0; i < 3; i++) printf("inputs[%d] = (%d, %d)\noutputs[%d] = %d\n", i, inputs[i]->a, inputs[i]->b, i, outputs[i]->res);
     printf("Congrats, all tests passed!\n");
 }

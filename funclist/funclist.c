@@ -68,12 +68,12 @@ void executeAtIndices(FuncList* fl, size_t* indices, void** inputs, void** outpu
 void executeByIds(FuncList* fl, size_t* ids, void** inputs, void** outputs, size_t len){
     if(NULL == fl || NULL == ids) return;
     size_t done[len];
-    for (size_t j = 0; j < len; j++) done[j] = 0; // initialize to 0
-    for (size_t i = 0; i < len; i++){ // for each function in list
-        for (size_t j = 0; j < fl->len; j++){ // check for each id
-            if(fl->ids[i] == ids[j] && !done[j]){ // ith function matches jth id
-                fl->funcs[i](inputs[j], outputs[j]);
-                done[j] = 1; // mark as done
+    for (size_t i = 0; i < len; i++) done[i] = 0; // initialize to 0
+    for (size_t i = 0; i < len; i++){ // for each function in requirement list
+        for (size_t j = 0; j < fl->len; j++){ // check for each id in fl
+            if(fl->ids[j] == ids[i] && !done[i]){ // ith func matches jth id in fl
+                fl->funcs[j](inputs[i], outputs[i]);
+                done[i] = 1; // mark as done
             }
         }
     }
@@ -91,12 +91,12 @@ void repeatExecAtIndices(FuncList* fl, size_t* indices, void* input, void** outp
 void repeatExecByIds(FuncList* fl, size_t* ids, void* input, void** outputs, size_t len){
     if(NULL == fl || NULL == ids) return;
     size_t done[len];
-    for (size_t j = 0; j < len; j++) done[j] = 0; // initialize to 0
-    for (size_t i = 0; i < len; i++){ // for each function in list
-        for (size_t j = 0; j < fl->len; j++){ // check for each id
-            if(fl->ids[i] == ids[j] && !done[j]){ // ith function matches jth id
-                fl->funcs[i](input, outputs[j]);
-                done[j] = 1; // mark as done
+    for (size_t i = 0; i < len; i++) done[i] = 0; // initialize to 0
+    for (size_t i = 0; i < len; i++){ // for each function in requirement list
+        for (size_t j = 0; j < fl->len; j++){ // check for each id in fl
+            if(fl->ids[j] == ids[i] && !done[i]){ // ith function matches jth id in fl
+                fl->funcs[j](input, outputs[i]);
+                done[i] = 1; // mark as done
             }
         }
     }
@@ -140,4 +140,3 @@ void printFuncList(FuncList* fl){
     }
     printf("}\n");
 }
-
