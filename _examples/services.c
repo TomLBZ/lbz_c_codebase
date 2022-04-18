@@ -1,5 +1,4 @@
-#include "headers/services.h"
-#include "headers/common.h"
+#include "services.h"
 // file scope variable
 UDP_Stats s_udp_stats;
 

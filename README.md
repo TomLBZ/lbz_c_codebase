@@ -8,7 +8,7 @@ Hopefully, the code here can be reused later for other projects, since many of t
 |---------|-------|-------------|
 |_examples|some examples using apis in other folders|verify (or un-verify?) that the code works|
 |curses|```colors.c```, ```curses.c```, ```curses.h```, ```test.c```|a wrapper for the ncurses library|
-|funclist|```funclist.c```, ```test.c```|helper classes for writing generic code in C|
+|funclist|```funclist.c```, ```funclist.h```, ```test.c```|helper classes for writing generic code in C|
 |networking|```networking.c```, ```networking.h```, ```test.c```|helper classes for socket programming, implementing TCP / UDP services, etc.|
 |strings|```strings.c```, ```strings.h```, ```test.c```|helper classes to deal with nasty string operations in C|
 ## Liscence?

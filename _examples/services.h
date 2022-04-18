@@ -1,4 +1,13 @@
-#include "../lbzapi/headers/lbznetworking.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <math.h>
+#include <string.h>
+#include "../networking/networking.h"
 
 #if !defined(SERVICES_MACROS)
 #define SERVICES_MACROS
