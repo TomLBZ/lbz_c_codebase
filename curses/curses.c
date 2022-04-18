@@ -1,5 +1,5 @@
-#include "headers/lbzcurses.h"
-#include "headers/lbzstr.h"
+#include "curses.h"
+#include "../strings/strings.h"
 
 UIVars lbzCursesUI(){
     UIVars vars;

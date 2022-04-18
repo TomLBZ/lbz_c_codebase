@@ -1,122 +1,87 @@
-#include "../headers/lbzstr.h"
-#include "../headers/lbzcurses.h"
-#include "../headers/lbznetworking.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
+#include "funclist.h"
 
-void testStr();
-void testUI();
-void testNetwork();
-NetState testTCPserviceS(int fdin, int fdout, size_t buffsize);
-NetState testTCPserviceC(int fdin, int fdout, size_t buffsize);
-NetState testUDPserviceS(int fdin, int fdout, size_t buffsize, Sockaddr* addr, socklen_t addrLen, socklen_t* len);
-NetState testUDPserviceC(int fdin, int fdout, size_t buffsize, Sockaddr* addr, socklen_t addrLen, socklen_t* len);
+typedef struct inStruct_t{
+    int a;
+    int b;
+} InStruct;
+
+typedef struct resStruct_t{
+    int res;
+} ResStruct;
+
+void add(void* input, void* output);
+void subtract(void* input, void* output);
+void multilpy(void* input, void* output);
+void divide(void* input, void* output);
+void test();
 
 int main(){
-    //testStr();
-    testNetwork();
+    test();
     return 0;
 }
 
-void testUI(){
-    UIVars ui = lbzCursesUI();
-    Control* frame = createControl(0,0,ui.w,ui.h,1,COLOR_PAIR(C_BLACK_CYAN));
-    Textbox* frametitle = createTextbox(20,0,20,2,COLOR_PAIR(C_BLUE_BLACK),MIDDLE,NORMAL);
-    char frametitletext[] = "Helloooooooo\nWorld!";
-    frametitle->text = frametitletext;
-    addTextbox(frame, frametitle);
-    addControl(&ui, frame);
-    //debug();
-    updateUI(&ui);
-    getchar();
-    destroyUI(&ui);
+void add(void* input, void* output){
+    ((ResStruct*)output)->res = ((InStruct*)input)->a + ((InStruct*)input)->b;
 }
 
-void testStr(){
-    char str[] = "Hello \nWorld!";
-    char str2[] = "888 999 777 666";
-    char* str2_cleaned = strReplace(str2, " ", "");
-    size_t npages = 0;
-    size_t width = 20;
-    size_t height = 2;
-    char*** pages = strToPages(str, width, height, &npages);
-    char buffer[SPRTF_BUFF_SIZE];
-    char* p = buffer;
-    int o1,o2;
-    o1 = sprintpgs(p, pages, npages, height);
-    p += o1;
-    o2 = sprintlnsep(p, str2_cleaned, -1);
-    p += o2;
-    freePages(pages, npages, height);
-    sprintf(p, "Memory Freed!\n");
-    printf("%s",buffer);
+void subtract(void* input, void* output){
+    ((ResStruct*)output)->res = ((InStruct*)input)->a - ((InStruct*)input)->b;
 }
 
-void testNetwork(){
-    bool isServer = false;
-    bool isTCP = true;
-    bool isIPv6 = false;
-    NetConfig config = {
-        .ip         =   strdup("127.0.0.1"), 
-        .ipType     =   isIPv6 ? IPv6 : IPv4,
-        .port       =   5350, 
-        .protocol   =   isTCP ? TCP : UDP, 
-        .role       =   isServer ? SERVER : CLIENT,
-        .queueSize  =   NET_QUEUESIZE,
-        .bufferSize =   NET_BUFFERSIZE
-    };
-    if (isTCP) addTCPService(isServer ? testTCPserviceS : testTCPserviceC, &config);
-    else addUDPService(isServer ? testUDPserviceS : testUDPserviceC, &config);
-    NetState ns = startNetworking(&config);
-    if(ns != STATE_SUCCESS) printf("Error code: %d\n", (int)ns);
+void multilpy(void* input, void* output){
+    ((ResStruct*)output)->res = ((InStruct*)input)->a * ((InStruct*)input)->b;
 }
 
-NetState testTCPserviceS(int fdin, int fdout, size_t buffsize){
-    unsigned char buf[buffsize];
-    int count;
-    while((count=read(fdin, buf, 1024)) > 0){
-        unsigned char* p;
-        for ( p = buf; p < buf+count; p++)
-        {
-            if(islower(*p)){
-                *p+=13;
-                if(*p>'z')*p-=26;
-            }
-        }
-        write(fdout, buf, count);
-    }
-    return STATE_SUCCESS;
+void divide(void* input, void* output){
+    ((ResStruct*)output)->res = ((InStruct*)input)->a / ((InStruct*)input)->b;
 }
 
-NetState testTCPserviceC(int fdin, int fdout, size_t buffsize){
-    unsigned char buf[buffsize];
-    int count;
-    while((count=read(0, buf, buffsize))>0){
-        write(fdout, buf, count);   // communicate with server
-        read(fdin, buf, count); // receive from server
-        write(1, buf, count);   // write to stdout
-    }
-    return STATE_SUCCESS;
-}
-
-NetState testUDPserviceS(int fdin, int fdout, size_t buffsize, Sockaddr* addr, socklen_t addrLen, socklen_t* len){
-    char buf[buffsize];
-    int n = recvfrom(fdin, &buf, buffsize, 0, addr, len);
-    if(n==-1) return RECEIVING_ERROR;
-    buf[n] = '\0';
-    printf("Received: %s\n", buf);
-    return STATE_SUCCESS;
-}
-
-NetState testUDPserviceC(int fdin, int fdout, size_t buffsize, Sockaddr* addr, socklen_t addrLen, socklen_t* len){
-    char buf[buffsize];
-    printf("Please input a string (less than 50 characters):\n");
-    while (fgets(buf, buffsize, stdin) == NULL) {
-		printf("error input\n");
-	}
-    sendto(fdout, &buf, strlen(buf), 0, addr, addrLen);
-    printf("Sent.\n");
-    return STATE_SUCCESS;
+void test(){
+    printf("creating func list...\n");
+    InStruct input1 = {.a = 6, .b = 3};
+    InStruct input2 = {.a = 55, .b = 11};
+    InStruct input3 = {.a = 90, .b = 9};
+    ResStruct output1 = {.res = 0};
+    ResStruct output2 = {.res = 0};
+    ResStruct output3 = {.res = 0};
+    InStruct inputs[3] = {input1, input2, input3};
+    ResStruct outputs[3] = {output1, output2, output3};
+    void* pinputs = inputs;
+    void* poutputs = outputs;
+    FuncList fl = createFuncList();
+    printFuncList(&fl);
+    printf("adding funcs to func list\n");
+    addFuncToList(&fl, add, lowerLettersToFuncId("add", 3));
+    addFuncToList(&fl, subtract, lowerLettersToFuncId("sub", 3));
+    addFuncToList(&fl, multilpy, lowerLettersToFuncId("mul", 3));
+    addFuncToList(&fl, divide, lowerLettersToFuncId("div", 3));
+    printFuncList(&fl);
+    printf("All added. Removing \"add\" from func list by 2809...\n");
+    removeFuncById(&fl, 2809);
+    printFuncList(&fl);
+    printf("done. now adding it back...\n");
+    addFuncToList(&fl, add, 2809);
+    printFuncList(&fl);
+    printf("done. now removing sub from list at index 0...\n");
+    removeFuncByIndex(&fl, 0);
+    printFuncList(&fl);
+    executeAtIndex(&fl, 0, &input1, &output1);
+    printf("done. now executing at index 0, should be \"mult\"...\nres = %d\n", output1.res);
+    executeById(&fl, lowerLettersToFuncId("div", 3), &input2, &output2);
+    printf("done. now executing by id \"div\"...\nres = %d\n", output2.res);
+    printf("done. now executing all...\n");
+    executeAll(&fl, &pinputs, &poutputs);
+    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
+    printf("done. now executing by ids \"add\" then \"div\"...\n");
+    size_t ids[2];
+    ids[0] = 20384; ids[1] = lowerLettersToFuncId("div", 3);
+    executeByIds(&fl, ids, &pinputs, &poutputs, 2);
+    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
+    printf("done. now repeat executing by indices 1 and 2, using input 6 and 3, should be \"div\" then \"add\"...\n");
+    ids[0] = 0; ids[1] = 1;
+    repeatExecAtIndices(&fl, ids, &pinputs, &poutputs, 2);
+    for(size_t i = 0; i < 3; i++) printf("outputs[%lu] = %d\n", i, outputs[i].res);
+    printf("Congrats, all tests passed!\n");
 }

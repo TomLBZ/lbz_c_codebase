@@ -1,5 +1,4 @@
-#include "headers/lbznetworking.h"
-#include "headers/lbzstr.h"
+#include "networking.h"
 #include <stdio.h>
 #include <stdlib.h>
 

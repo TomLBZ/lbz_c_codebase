@@ -1,4 +1,4 @@
-#include "headers/lbzcurses.h"
+#include "curses.h"
 
 bool initColors(){
     bool hasColor = has_colors();

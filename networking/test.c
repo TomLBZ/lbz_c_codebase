@@ -1,6 +1,4 @@
-#include "../headers/lbzstr.h"
-#include "../headers/lbzcurses.h"
-#include "../headers/lbznetworking.h"
+#include "networking.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,40 +18,6 @@ int main(){
     return 0;
 }
 
-void testUI(){
-    UIVars ui = lbzCursesUI();
-    Control* frame = createControl(0,0,ui.w,ui.h,1,COLOR_PAIR(C_BLACK_CYAN));
-    Textbox* frametitle = createTextbox(20,0,20,2,COLOR_PAIR(C_BLUE_BLACK),MIDDLE,NORMAL);
-    char frametitletext[] = "Helloooooooo\nWorld!";
-    frametitle->text = frametitletext;
-    addTextbox(frame, frametitle);
-    addControl(&ui, frame);
-    //debug();
-    updateUI(&ui);
-    getchar();
-    destroyUI(&ui);
-}
-
-void testStr(){
-    char str[] = "Hello \nWorld!";
-    char str2[] = "888 999 777 666";
-    char* str2_cleaned = strReplace(str2, " ", "");
-    size_t npages = 0;
-    size_t width = 20;
-    size_t height = 2;
-    char*** pages = strToPages(str, width, height, &npages);
-    char buffer[SPRTF_BUFF_SIZE];
-    char* p = buffer;
-    int o1,o2;
-    o1 = sprintpgs(p, pages, npages, height);
-    p += o1;
-    o2 = sprintlnsep(p, str2_cleaned, -1);
-    p += o2;
-    freePages(pages, npages, height);
-    sprintf(p, "Memory Freed!\n");
-    printf("%s",buffer);
-}
-
 void testNetwork(){
     bool isServer = false;
     bool isTCP = true;
@@ -64,8 +28,8 @@ void testNetwork(){
         .port       =   5350, 
         .protocol   =   isTCP ? TCP : UDP, 
         .role       =   isServer ? SERVER : CLIENT,
-        .queueSize  =   NET_QUEUESIZE,
-        .bufferSize =   NET_BUFFERSIZE
+        .queueSize  =   5,
+        .bufferSize =   1024
     };
     if (isTCP) addTCPService(isServer ? testTCPserviceS : testTCPserviceC, &config);
     else addUDPService(isServer ? testUDPserviceS : testUDPserviceC, &config);
