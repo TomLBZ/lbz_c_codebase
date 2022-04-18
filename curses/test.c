@@ -5,8 +5,7 @@
 void testUI();
 
 int main(){
-    //testStr();
-    testNetwork();
+    testUI();
     return 0;
 }
 

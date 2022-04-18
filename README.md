@@ -1,8 +1,12 @@
-# LBZ's personal C language codebase
+# LBZ's Personal C Codebase
 ## What is this?
 This is a place where old (or new) C files for school projects are dumped. They may or may not be related to any homework or asisgnment. The moral of the story is, when I write something that is not graded, I do not want my effort to go unrecorded.
 ## What are included here?
-Hopefully, the code here can be reused later for other projects, since many of these have been written with a more or less sense of generality.
+The code here are NOT algorithm implementations / data structures. They are short and sweet functional modules for tasks that may or may not be useful for you, hence the name ***personal*** C codebase.
+
+Hopefully, however, since many of these have been written with a more or less sense of generality, it can be proven helpful if you want to be that special kid handing in homework code that is all different from other students', yet still gets the task done :)
+
+Unfortunately, no extra marks for that though :(
 ## Table of contents
 |Directory|Content|Functionality|
 |---------|-------|-------------|
@@ -12,4 +16,4 @@ Hopefully, the code here can be reused later for other projects, since many of t
 |networking|```networking.c```, ```networking.h```, ```test.c```|helper classes for socket programming, implementing TCP / UDP services, etc.|
 |strings|```strings.c```, ```strings.h```, ```test.c```|helper classes to deal with nasty string operations in C|
 ## Liscence?
-No liscence. Use them if you trust that the code works. I do not trust them.
+No liscence. Use them if you trust that the code works. For one, I do not trust them.

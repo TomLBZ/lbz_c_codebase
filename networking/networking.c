@@ -2,19 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-uint32_t stringToIPv4(char* str){
-    size_t nlines = 0;
-    char** lines = strToLines(str, ".", &nlines);
-    uint32_t result = 0;
-    for (size_t i = 0; i < nlines; i++)
-    {
-        uint32_t part = atoi(lines[i]);
-        part <<= (24 - 8 * i);
-        result += part;
-    }
-    return result;
-}
-
 NetState startNetworking(NetConfig* config){
     switch (config->role)
     {

@@ -1,5 +1,4 @@
 #include "strings.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -7,8 +6,7 @@
 void testStr();
 
 int main(){
-    //testStr();
-    testNetwork();
+    testStr();
     return 0;
 }
 

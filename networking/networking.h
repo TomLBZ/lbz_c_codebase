@@ -70,8 +70,6 @@ typedef struct NetConfig_t{
     int nudpfuncs;
 } NetConfig;
 
-/*string to ipv4*/
-uint32_t stringToIPv4(char* str);
 /*start networking*/
 NetState startNetworking(NetConfig* config);
 /*start server*/

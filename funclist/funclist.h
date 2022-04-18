@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #if !defined(FUNCLIST_MACROS)
 #define FUNCLIST_MACROS
     #define FUNC_ID_CHARBUFLEN  14
